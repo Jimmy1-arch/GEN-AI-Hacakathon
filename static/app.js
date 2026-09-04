@@ -78,6 +78,16 @@ function handleResult(data) {
     } else {
         statusIcon.textContent = "🟢";
     }
+    
+    // Play audio if provided
+    if (data.audio_base64) {
+        try {
+            const audio = new Audio("data:audio/mp3;base64," + data.audio_base64);
+            audio.play();
+        } catch (err) {
+            console.error("Failed to play audio", err);
+        }
+    }
 
     if (data.follow_up_questions && data.follow_up_questions.length > 0) {
         // Show follow-up
