@@ -21,6 +21,7 @@ Patient Statement:
 def extract_patient_facts(statement: str, current_case: PatientCase = None) -> PatientCase:
     # If we have a current case, we should merge the new statement
     prompt = EXTRACTION_PROMPT.format(statement=statement)
+    prompt += f"\n\nEXPECTED JSON SCHEMA:\n{json.dumps(PatientCase.model_json_schema(), indent=2)}\n"
     if current_case:
         prompt += f"\n\nPrevious established facts:\n{current_case.model_dump_json()}"
         prompt += "\n\nUpdate the facts based on the NEW statement. Retain previous facts unless contradicted."

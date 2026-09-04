@@ -219,6 +219,10 @@ textarea:focus {
     transition: background 0.2s;
 }
 
+.icon-btn svg {
+    pointer-events: none;
+}
+
 .icon-btn:hover {
     background: var(--primary-hover);
 }

@@ -20,9 +20,11 @@ class GeminiClient:
                 "temperature": 0.0, # Deterministic behavior
                 "response_mime_type": "application/json"
             }
-            if schema_class:
-                config_dict["response_schema"] = schema_class
-                
+            # We intentionally do not pass response_schema here because 
+            # newer Pydantic versions emit 'null' types in anyOf which 
+            # crashes the google.genai SDK parser.
+            # The prompt already enforces the JSON structure.
+            
             response = self.client.models.generate_content(
                 model=model,
                 contents=prompt,
