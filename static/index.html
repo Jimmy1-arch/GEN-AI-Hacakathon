@@ -3,65 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TriageAI - Patient Intake Assistant</title>
+    <title>TriageAI - Conversational Intake</title>
     <link rel="stylesheet" href="/static/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="navbar">
         <div class="logo-container">
+            <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
             <h1 class="logo">TriageAI</h1>
-            <p class="subtitle">Rule-grounded intake support for human clinical teams</p>
         </div>
         <div class="demo-buttons">
-            <button onclick="loadDemo('normal')">Demo: Normal</button>
-            <button onclick="loadDemo('high_risk')">Demo: High Risk</button>
-            <button onclick="loadDemo('null_case')">Demo: Null Case</button>
+            <button onclick="startDemo('fever')">Demo: Fever</button>
+            <button onclick="startDemo('chest_pain')">Demo: High Risk</button>
+            <button onclick="startDemo('null_case')">Demo: Out of Scope</button>
         </div>
     </header>
 
     <main class="dashboard">
-        <!-- LEFT PANEL -->
-        <section class="panel input-panel">
-            <h2>Patient Description</h2>
-            <textarea id="patientInput" placeholder="Describe what the patient reported..."></textarea>
-            <button id="startBtn" class="primary-btn" onclick="startAssessment()">START ASSESSMENT</button>
+        <!-- CHAT PANEL -->
+        <section class="panel chat-panel">
+            <div class="chat-header">
+                <h2>Intake Interview</h2>
+                <span class="status-pill connected">🟢 Connected to Triage Engine</span>
+            </div>
+            
+            <div class="chat-history" id="chatHistory">
+                <!-- Welcome Message -->
+                <div class="message ai-message">
+                    <div class="avatar ai-avatar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 1 10 10v4a2 2 0 0 1-2 2h-2.5a2.5 2.5 0 0 1-2.5-2.5v-3a2.5 2.5 0 0 1 2.5-2.5h2.5A8 8 0 0 0 12 4a8 8 0 0 0-8 8h2.5a2.5 2.5 0 0 1 2.5 2.5v3a2.5 2.5 0 0 1-2.5 2.5H4a2 2 0 0 1-2-2v-4a10 10 0 0 1 10-10z"/></svg>
+                    </div>
+                    <div class="bubble">
+                        Hello. Please describe your primary complaint or symptoms.
+                    </div>
+                </div>
+            </div>
 
-            <!-- FOLLOW-UP PANEL -->
-            <div id="followupPanel" class="hidden followup-box">
-                <h3 id="followupCount">FOLLOW-UP</h3>
-                <p id="followupQuestion" class="question-text"></p>
-                <textarea id="followupAnswer" placeholder="Patient's response..."></textarea>
-                <button class="primary-btn" onclick="submitFollowup()">SUBMIT ANSWER</button>
+            <div class="chat-input-area">
+                <textarea id="chatInput" placeholder="Type your response here..." rows="2" onkeydown="handleEnter(event)"></textarea>
+                <button id="sendBtn" class="primary-btn icon-btn" onclick="sendMessage()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
             </div>
         </section>
 
-        <!-- RIGHT PANEL -->
+        <!-- TRIAGE NOTE PANEL -->
         <section class="panel result-panel">
-            <h2>Case Status</h2>
-            <div id="statusIndicator" class="status-indicator">
-                <span id="statusIcon">⚪</span> <span id="statusText">Awaiting Input</span>
+            <div class="panel-header">
+                <h2>Triage Status</h2>
+                <div id="statusIndicator" class="status-indicator">
+                    <span id="statusIcon">⚪</span> <span id="statusText">Awaiting Input</span>
+                </div>
             </div>
 
-            <div id="resultContent" class="hidden">
+            <div id="resultContent" class="hidden result-content">
                 <div class="result-card">
-                    <div class="result-row"><strong>Urgency:</strong> <span id="resUrgency"></span></div>
-                    <div class="result-row"><strong>Department:</strong> <span id="resDepartment"></span></div>
-                    <div class="result-row"><strong>Triggered Rule:</strong> <span id="resRule"></span></div>
-                    <div class="result-row"><strong>Reason:</strong> <span id="resReason"></span></div>
-                    <div class="result-row"><strong>Unknowns:</strong> <span id="resUnknowns"></span></div>
+                    <div class="result-row">
+                        <span class="label">Urgency</span>
+                        <span class="val urgency-val" id="resUrgency"></span>
+                    </div>
+                    <div class="result-row">
+                        <span class="label">Department</span>
+                        <span class="val" id="resDepartment"></span>
+                    </div>
+                    <div class="result-row">
+                        <span class="label">Triggered Rule</span>
+                        <span class="val code-val" id="resRule"></span>
+                    </div>
+                    <div class="result-row">
+                        <span class="label">Reason</span>
+                        <span class="val" id="resReason"></span>
+                    </div>
+                    <div class="result-row">
+                        <span class="label">Missing Info</span>
+                        <span class="val" id="resUnknowns"></span>
+                    </div>
                 </div>
 
                 <div class="safety-warning">
-                    ⚠️ This system does not provide a diagnosis. Human assessment required for final decision.
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    This system does not provide a diagnosis. Human assessment required.
                 </div>
 
-                <button id="traceBtn" class="secondary-btn" onclick="toggleTrace()">WHY THIS DECISION?</button>
-
-                <div id="decisionTrace" class="hidden trace-box">
-                    <h4>Decision Trace</h4>
-                    <ul id="traceList"></ul>
+                <div class="trace-section">
+                    <button id="traceBtn" class="ghost-btn" onclick="toggleTrace()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        View Decision Trace
+                    </button>
+                    <div id="decisionTrace" class="hidden trace-box">
+                        <ul id="traceList"></ul>
+                    </div>
                 </div>
+            </div>
+            
+            <div id="emptyState" class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                <p>Triage note will be generated upon completion of the interview.</p>
             </div>
         </section>
     </main>
