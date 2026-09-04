@@ -3,11 +3,12 @@ from src.schemas import AssessmentRequest, TriageResult, PatientCase
 from src.extraction import extract_patient_facts
 from src.rules import evaluate_case
 from src.followups import generate_followup_questions
+from src.tts import generate_audio_base64
 
 triage_router = APIRouter()
 
 @triage_router.post("/assess", response_model=TriageResult)
-def assess_patient(req: AssessmentRequest):
+async def assess_patient(req: AssessmentRequest):
     try:
         # 1. Extract structured facts from the natural language input via Gemini
         # It handles merging if current_case is provided.
@@ -20,6 +21,14 @@ def assess_patient(req: AssessmentRequest):
         if result.follow_up_questions:
             questions = generate_followup_questions(result.follow_up_questions)
             result.follow_up_questions = questions
+            
+            # Generate voice for the first follow-up question
+            if questions:
+                result.audio_base64 = await generate_audio_base64(questions[0])
+        else:
+            # Generate voice for final decision
+            msg = f"Triage decision: {result.urgency}. {result.decision}"
+            result.audio_base64 = await generate_audio_base64(msg)
             
         return result
     except Exception as e:

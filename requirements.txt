@@ -5,3 +5,4 @@ pydantic==2.6.1
 numpy==1.26.4
 python-dotenv==1.0.1
 pytest==8.0.0
+edge-tts==7.0.6
