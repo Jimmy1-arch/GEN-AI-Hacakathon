@@ -44,6 +44,7 @@ class TriageResult(BaseModel):
     follow_up_questions: List[str] = []
     case_status: str # "🟢 Information collected", "🟡 Follow-up required", "🔴 Human escalation", "⚪ Outside coverage"
     audio_base64: Optional[str] = None
+    current_case: Optional[PatientCase] = None
 
 class AssessmentRequest(BaseModel):
     patient_statement: str

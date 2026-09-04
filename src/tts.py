@@ -1,7 +1,7 @@
 import edge_tts
 import base64
 
-async def generate_audio_base64(text: str, voice: str = "en-US-AriaNeural") -> str:
+async def generate_audio_base64(text: str, voice: str = "en-US-AvaMultilingualNeural") -> str:
     """
     Generates spoken audio from text using Microsoft Edge TTS
     and returns it as a base64 encoded string.

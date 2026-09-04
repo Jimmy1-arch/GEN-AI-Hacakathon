@@ -30,6 +30,7 @@ async def assess_patient(req: AssessmentRequest):
             msg = f"Triage decision: {result.urgency}. {result.decision}"
             result.audio_base64 = await generate_audio_base64(msg)
             
+        result.current_case = case
         return result
     except Exception as e:
         print(f"Error in triage router: {e}")
