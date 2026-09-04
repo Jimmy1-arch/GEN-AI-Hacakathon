@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TriageAI - Patient Intake Assistant</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo-container">
+            <h1 class="logo">TriageAI</h1>
+            <p class="subtitle">Rule-grounded intake support for human clinical teams</p>
+        </div>
+        <div class="demo-buttons">
+            <button onclick="loadDemo('normal')">Demo: Normal</button>
+            <button onclick="loadDemo('high_risk')">Demo: High Risk</button>
+            <button onclick="loadDemo('null_case')">Demo: Null Case</button>
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <!-- LEFT PANEL -->
+        <section class="panel input-panel">
+            <h2>Patient Description</h2>
+            <textarea id="patientInput" placeholder="Describe what the patient reported..."></textarea>
+            <button id="startBtn" class="primary-btn" onclick="startAssessment()">START ASSESSMENT</button>
+
+            <!-- FOLLOW-UP PANEL -->
+            <div id="followupPanel" class="hidden followup-box">
+                <h3 id="followupCount">FOLLOW-UP</h3>
+                <p id="followupQuestion" class="question-text"></p>
+                <textarea id="followupAnswer" placeholder="Patient's response..."></textarea>
+                <button class="primary-btn" onclick="submitFollowup()">SUBMIT ANSWER</button>
+            </div>
+        </section>
+
+        <!-- RIGHT PANEL -->
+        <section class="panel result-panel">
+            <h2>Case Status</h2>
+            <div id="statusIndicator" class="status-indicator">
+                <span id="statusIcon">⚪</span> <span id="statusText">Awaiting Input</span>
+            </div>
+
+            <div id="resultContent" class="hidden">
+                <div class="result-card">
+                    <div class="result-row"><strong>Urgency:</strong> <span id="resUrgency"></span></div>
+                    <div class="result-row"><strong>Department:</strong> <span id="resDepartment"></span></div>
+                    <div class="result-row"><strong>Triggered Rule:</strong> <span id="resRule"></span></div>
+                    <div class="result-row"><strong>Reason:</strong> <span id="resReason"></span></div>
+                    <div class="result-row"><strong>Unknowns:</strong> <span id="resUnknowns"></span></div>
+                </div>
+
+                <div class="safety-warning">
+                    ⚠️ This system does not provide a diagnosis. Human assessment required for final decision.
+                </div>
+
+                <button id="traceBtn" class="secondary-btn" onclick="toggleTrace()">WHY THIS DECISION?</button>
+
+                <div id="decisionTrace" class="hidden trace-box">
+                    <h4>Decision Trace</h4>
+                    <ul id="traceList"></ul>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="/static/app.js"></script>
+</body>
+</html>
