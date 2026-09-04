@@ -1,0 +1,101 @@
+[
+  {
+    "rule_id": "R-CHEST-001",
+    "category": "chest pain",
+    "conditions": {"chest_pain": true, "breathing_difficulty": true},
+    "urgency": "HIGH",
+    "recommended_department": "Emergency Department",
+    "explanation": "Chest pain combined with breathing difficulty is a high-risk indicator requiring immediate emergency evaluation.",
+    "escalation_required": true,
+    "source": "Local Triage Guidelines v1",
+    "version": "1.0"
+  },
+  {
+    "rule_id": "R-CHEST-002",
+    "category": "chest pain",
+    "conditions": {"chest_pain": true},
+    "urgency": "URGENT",
+    "recommended_department": "Urgent Care",
+    "explanation": "Isolated chest pain requires urgent evaluation.",
+    "escalation_required": true,
+    "source": "Local Triage Guidelines v1",
+    "version": "1.0"
+  },
+  {
+    "rule_id": "R-FEVER-001",
+    "category": "fever",
+    "conditions": {"severity": "severe"},
+    "urgency": "URGENT",
+    "recommended_department": "Urgent Care",
+    "explanation": "Severe fever requires urgent medical attention.",
+    "escalation_required": true,
+    "source": "Local Triage Guidelines v1",
+    "version": "1.0"
+  },
+  {
+    "rule_id": "R-FEVER-002",
+    "category": "fever",
+    "conditions": {"severity": "mild"},
+    "urgency": "ROUTINE",
+    "recommended_department": "General Practice",
+    "explanation": "Mild fever can be evaluated routinely.",
+    "escalation_required": false,
+    "source": "Local Triage Guidelines v1",
+    "version": "1.0"
+  },
+  {
+    "rule_id": "R-INJURY-001",
+    "category": "injury",
+    "conditions": {"injury_severity": "severe"},
+    "urgency": "HIGH",
+    "recommended_department": "Emergency Department",
+    "explanation": "Severe injury requires immediate trauma care.",
+    "escalation_required": true,
+    "source": "Local Triage Guidelines v1",
+    "version": "1.0"
+  },
+  {
+    "rule_id": "R-INJURY-002",
+    "category": "injury",
+    "conditions": {"injury_severity": "mild"},
+    "urgency": "ROUTINE",
+    "recommended_department": "Minor Injuries Unit",
+    "explanation": "Mild injuries can be treated routinely.",
+    "escalation_required": false,
+    "source": "Local Triage Guidelines v1",
+    "version": "1.0"
+  },
+  {
+    "rule_id": "R-BREATH-001",
+    "category": "breathing difficulty",
+    "conditions": {"breathing_difficulty": true},
+    "urgency": "HIGH",
+    "recommended_department": "Emergency Department",
+    "explanation": "Breathing difficulty is a high-risk symptom requiring immediate evaluation.",
+    "escalation_required": true,
+    "source": "Local Triage Guidelines v1",
+    "version": "1.0"
+  },
+  {
+    "rule_id": "R-ABDOMEN-001",
+    "category": "abdominal pain",
+    "conditions": {"abdominal_pain": true, "severity": "severe"},
+    "urgency": "URGENT",
+    "recommended_department": "Emergency Department",
+    "explanation": "Severe abdominal pain requires urgent assessment to rule out acute surgical conditions.",
+    "escalation_required": true,
+    "source": "Local Triage Guidelines v1",
+    "version": "1.0"
+  },
+  {
+    "rule_id": "R-ABDOMEN-002",
+    "category": "abdominal pain",
+    "conditions": {"abdominal_pain": true, "severity": "mild"},
+    "urgency": "ROUTINE",
+    "recommended_department": "General Practice",
+    "explanation": "Mild abdominal pain can be evaluated routinely.",
+    "escalation_required": false,
+    "source": "Local Triage Guidelines v1",
+    "version": "1.0"
+  }
+]
