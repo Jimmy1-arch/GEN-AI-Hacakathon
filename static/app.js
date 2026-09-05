@@ -351,9 +351,9 @@ async function sendAssessmentRequest() {
         if (data.decision_trace) {
             data.decision_trace.forEach(step => {
                 const li = document.createElement('li');
-                if (step.includes("Human review status determined: REQUIRED") || step.includes("No rules matched")) {
+                if (step.includes("REQUIRED") || step.includes("No rules matched")) {
                     li.className = "warn";
-                } else if (step.includes("Sufficient") || step.includes("evaluated and matched")) {
+                } else {
                     li.className = "done";
                 }
                 li.textContent = step;
