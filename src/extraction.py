@@ -87,6 +87,9 @@ def _is_empty_input(text: str) -> bool:
     stripped = text.strip()
     if not stripped:
         return True
+    # Allow numbers like "8", "10"
+    if stripped.isdigit():
+        return False
     # Purely symbolic or very short (1-2 chars)
     if len(stripped) <= 2 and not stripped.isalpha():
         return True
