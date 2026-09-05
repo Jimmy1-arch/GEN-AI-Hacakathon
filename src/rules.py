@@ -96,8 +96,19 @@ def evaluate_case(case: PatientCase) -> TriageResult:
             decision_trace=trace
         )
 
-    # 2. Match Categories
+    # 2. Match Categories — check complaints first, fall back to symptoms as safety net
     cats = normalize_category(case.complaints)
+    if not cats and case.symptoms:
+        # LLM sometimes puts the main complaint in symptoms instead of complaints
+        cats = normalize_category(case.symptoms)
+        if cats:
+            logger.warning(
+                "Category found in symptoms (not complaints): %s — extraction prompt may need improvement",
+                cats
+            )
+            # Promote to complaints for downstream use
+            case.complaints = cats
+
     logger.info("Normalized categories: %s", cats)
 
     if not cats:

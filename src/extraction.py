@@ -19,6 +19,16 @@ CRITICAL RULES:
 - If the patient input is irrelevant, ambiguous, or completely off-topic, return an empty case with no facts.
 - This is an INTAKE system, not a diagnosis system. Do NOT output diagnosis suggestions.
 
+COMPLAINTS FIELD (MOST IMPORTANT):
+- The `complaints` list MUST contain the patient's primary medical condition as a lowercase string.
+- Use EXACTLY one of these supported values when they apply:
+  "fever", "injury", "chest pain", "breathing difficulty", "abdominal pain"
+- Example: Patient says "I have a fever" → complaints: ["fever"]
+- Example: Patient says "My chest hurts" → complaints: ["chest pain"]
+- Example: Patient says "I'm having trouble breathing" → complaints: ["breathing difficulty"]
+- If the complaint is not one of the five above, leave complaints as [].
+- Do NOT put these conditions in the `symptoms` field. `symptoms` is only for secondary/additional symptoms.
+
 BOOLEAN FIELDS (breathing_difficulty, chest_pain, abdominal_pain):
 - Set to true if the patient clearly states they have it.
 - Set to false if the patient clearly denies it.
