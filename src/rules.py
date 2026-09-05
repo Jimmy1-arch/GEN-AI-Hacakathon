@@ -112,6 +112,26 @@ def evaluate_case(case: PatientCase) -> TriageResult:
     logger.info("Normalized categories: %s", cats)
 
     if not cats:
+        # Check if the AI flagged this as a vague/unclear input needing clarification
+        if "complaint" in [u.lower() for u in case.unknowns]:
+            trace.append("Complaint is vague or missing context")
+            return TriageResult(
+                urgency="PENDING",
+                recommended_department="Pending",
+                decision="Needs clarification of main complaint.",
+                rule_id=None,
+                reason="The patient's initial statement did not contain a clear medical complaint.",
+                patient_initially_reported=[],
+                established_through_followup=[],
+                still_unknown=["complaint"],
+                evidence_text="Vague input",
+                human_review_required=False,
+                follow_up_questions=["Please describe your main complaint or symptoms."],
+                case_status="🟡 Follow-up required",
+                decision_trace=trace
+            )
+        
+        # Otherwise it's out of scope (e.g. toothache)
         trace.append("Complaint could not be mapped to a supported category")
         trace.append("Automatic fallback to Human Review")
         return TriageResult(

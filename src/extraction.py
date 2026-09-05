@@ -16,7 +16,8 @@ CRITICAL RULES:
 - Use null for unknown or unstated values (do NOT default to false).
 - Extract ONLY facts relevant to: Fever, Injury, Chest pain, Breathing difficulty, Abdominal pain.
 - If the patient says "I don't know", "maybe", "not sure", "can't tell" — leave the field null (UNKNOWN).
-- If the patient input is irrelevant, ambiguous, or completely off-topic, return an empty case with no facts.
+- If the patient input is irrelevant, out of scope, or a specific unsupported condition (like "toothache"), return an empty case with no facts, and do NOT put anything in unknowns.
+- If the patient input is extremely vague ("I don't feel well", "Something is wrong") or is just "Yes" or "No" without context, return an empty case BUT add "complaint" to the `unknowns` list.
 - This is an INTAKE system, not a diagnosis system. Do NOT output diagnosis suggestions.
 
 COMPLAINTS FIELD (MOST IMPORTANT):
