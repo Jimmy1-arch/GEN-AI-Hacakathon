@@ -4,8 +4,8 @@ from src.rules import evaluate_case
 def test_high_risk_chest_pain():
     case = PatientCase(
         complaints=["chest pain"],
-        chest_pain=True,
-        breathing_difficulty=True,
+        chest_pain="TRUE",
+        breathing_difficulty="TRUE",
         severity="severe"
     )
     result = evaluate_case(case)
