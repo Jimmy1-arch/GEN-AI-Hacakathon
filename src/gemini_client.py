@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 from google import genai
@@ -9,6 +10,8 @@ logger = logging.getLogger(__name__)
 
 # Default timeout for all Gemini API calls (seconds)
 GEMINI_TIMEOUT_SECONDS = 25
+# Model — can be overridden via GEMINI_MODEL env var
+DEFAULT_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
 
 
 class GeminiTimeoutError(Exception):
@@ -29,12 +32,13 @@ class GeminiClient:
         self,
         prompt: str,
         schema_class: type[BaseModel] = None,
-        model: str = "gemini-2.0-flash-lite",
+        model: str = None,
         timeout: int = GEMINI_TIMEOUT_SECONDS
     ) -> str:
         if not self.client:
             raise Exception("GEMINI_API_KEY not configured")
 
+        active_model = model or DEFAULT_MODEL
         try:
             config_dict = {
                 "temperature": 0.0,  # Deterministic behavior
@@ -45,10 +49,10 @@ class GeminiClient:
             # crashes the google.genai SDK parser.
             # The prompt already enforces the JSON structure.
 
-            logger.debug("Calling Gemini model=%s timeout=%ds", model, timeout)
+            logger.debug("Calling Gemini model=%s timeout=%ds", active_model, timeout)
 
             response = self.client.models.generate_content(
-                model=model,
+                model=active_model,
                 contents=prompt,
                 config=types.GenerateContentConfig(**config_dict)
             )
